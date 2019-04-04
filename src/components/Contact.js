@@ -1,59 +1,25 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { Consumer } from "../context";
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+
 
 class Contact extends Component {
-	state = {
-		showContactInfo: true
-	};
-	onDeleteClick = (id, dispatch) => {
-		dispatch({
-			type: "DELETE_CONTACT",
-			payload: id
-		});
-	};
-	onShowClick = e => { };
 	render() {
-
-		const { showContactInfo } = this.state;
+		const { name, phone, email } = this.props
 		return (
-			<Consumer>
-				{value => {
-					const { dispatch } = value;
-					return (
-						<div className="card card-body mb-3">
-							<h4>
-								{this.props.name}
-								<i
-									onClick={() =>
-										this.setState({
-											showContactInfo: !this.state.showContactInfo
-										})
-									}
-									className="fas fa-sort-down"
-
-								/>
-								<i
-									className="fas fa-times"
-									style={{ float: "right" }}
-									onClick={this.onDeleteClick.bind(this, this.props.id, dispatch)}
-								/>
-							</h4>
-							{showContactInfo ? (
-								<ul className="list-group">
-									<li className="list-group-item">Email:{this.props.email}</li>
-									<li className="list-group-item">Phone:{this.props.phone}</li>
-								</ul>
-							) : null}
-						</div>
-					);
-				}}
-			</Consumer>
-		);
+			<div className="card card-body mb-3">
+				<h1>{name}</h1>
+				<ul className="list-group">
+					<li className="list-group-item">Email:{email}</li>
+					<li className="list-group-item">Phone: {phone}</li>
+				</ul>
+			</div>
+		)
 	}
 }
-
 Contact.propTypes = {
-	contact: PropTypes.object.isRequired
-};
-export default Contact;
+	name: PropTypes.string.isRequired,
+	phone: PropTypes.string.isRequired,
+	email: PropTypes.string.isRequired
+}
+
+export default Contact
