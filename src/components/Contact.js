@@ -3,23 +3,51 @@ import PropTypes from 'prop-types'
 
 
 class Contact extends Component {
+	constructor() {
+		super();
+		this.state = {
+			showInfo: false
+		}
+	}
+	// Method
+	iconClick = (e) => {
+		this.setState({ showInfo: !this.state.showInfo });
+	}
+	deleteIcon = (id) => {
+		this.props.deleteClickHandler();
+	}
+
 	render() {
-		const { name, phone, email } = this.props
+		/// Deconstructing
+		const { name, email, phone } = this.props.contact
+		const { showInfo } = this.state;
 		return (
 			<div className="card card-body mb-3">
-				<h1>{name}</h1>
-				<ul className="list-group">
-					<li className="list-group-item">Email:{email}</li>
-					<li className="list-group-item">Phone: {phone}</li>
-				</ul>
+
+				<h4>{name}
+					<i onClick={this.iconClick} style={{ cursor: 'pointer' }} className="fas fa-sort-down"></i>
+					<i className="fas fa-times" style={{ cursor: 'pointer', float: 'right', color: 'red' }} onClick={this.deleteIcon}></i>
+				</h4>
+
+				{showInfo ?
+					////////True
+					(<ul className="list-group">
+						<li className="list-group-item">
+							Email:{email}
+						</li>
+						<li className="list-group-item">
+							Phone: {phone}
+						</li>
+					</ul>)
+					////False
+					: null}
 			</div>
 		)
 	}
 }
 Contact.propTypes = {
-	name: PropTypes.string.isRequired,
-	phone: PropTypes.string.isRequired,
-	email: PropTypes.string.isRequired
+	contact: PropTypes.object.isRequired,
+	deleteClickHandler: PropTypes.func.isRequired
 }
 
 export default Contact
