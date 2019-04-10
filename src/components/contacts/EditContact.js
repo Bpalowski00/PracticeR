@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Consumer } from '../../context';
 import axios from 'axios'
-
 import TextInputGroup from '../layout/TextInputGroup'
-class AddContact extends Component {
+
+class EditContact extends Component {
 	constructor() {
 		super();
 		this.state = {
@@ -11,10 +11,21 @@ class AddContact extends Component {
 			email: '',
 			phone: '',
 			errors: {
-
 			}
-
 		}
+	}
+	componentDidMount() {
+		const { id } = this.props.match.params;
+
+		axios.get(`https://jsonplaceholder.typicode.com/users/${id}`)
+			.then(res => {
+				const customer = res.data;
+				this.setState({
+					name: customer.name,
+					email: customer.email,
+					phone: customer.phone
+				})
+			})
 	}
 	onChange = (e) => {
 		this.setState({
@@ -53,20 +64,20 @@ class AddContact extends Component {
 			});
 			return;
 		}
-
-		const newContact = {
-			name: this.state.name,
-			email: this.state.email,
-			phone: this.state.phone
+		const updateContact = {
+			name,
+			email,
+			phone
 		}
-
-
-		axios.post('https://jsonplaceholder.typicode.com/users', newContact)
+		const { id } = this.props.match.params;
+		axios.put(`https://jsonplaceholder.typicode.com/users/${id}`, updateContact)
 			.then(res =>
 				dispatch({
-					type: 'ADD_CONTACT',
+					type: 'UPDATE_CONTACT',
 					payload: res.data
-				}))
+				})
+			)
+
 		this.setState({
 			name: '',
 			email: '',
@@ -80,7 +91,6 @@ class AddContact extends Component {
 		const { name, email, phone, errors } = this.state
 		return (
 
-
 			< Consumer >
 				{value => {
 					const { dispatch } = value;
@@ -88,7 +98,7 @@ class AddContact extends Component {
 						<div className="card mb-3">
 							<div className="card-header">
 								Add Contact
-						</div>
+							</div>
 							<div className="card-body">
 								<form onSubmit={this.onSubmit.bind(this, dispatch)}>
 									<TextInputGroup
@@ -115,11 +125,10 @@ class AddContact extends Component {
 										value={phone}
 										onChange={this.onChange}
 										error={errors.phone}
-
 									/>
 									<input
 										type="submit"
-										value=" Add Contact"
+										value="Update Contact"
 										className="btn btn-success btn-block">
 									</input>
 								</form>
@@ -132,4 +141,4 @@ class AddContact extends Component {
 
 	}
 }
-export default AddContact; 
+export default EditContact;

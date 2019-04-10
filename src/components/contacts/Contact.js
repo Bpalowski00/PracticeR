@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Consumer } from '../../context';
-
-
+import axios from 'axios'
+import { Link } from 'react-router-dom';
 class Contact extends Component {
 	constructor() {
 		super();
@@ -15,10 +15,11 @@ class Contact extends Component {
 		this.setState({ showInfo: !this.state.showInfo });
 	}
 	deleteIcon = (id, dispatch) => {
-		dispatch({
-			type: 'DELETE_CONTACT',
-			payload: id
-		})
+		axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`)
+			.then(res => dispatch({
+				type: 'DELETE_CONTACT',
+				payload: id
+			}))
 	}
 
 	render() {
@@ -37,6 +38,15 @@ class Contact extends Component {
 							<h4>{name}
 								<i onClick={this.iconClick} style={{ cursor: 'pointer' }} className="fas fa-sort-down"></i>
 								<i className="fas fa-times" style={{ cursor: 'pointer', float: 'right', color: 'red' }} onClick={this.deleteIcon.bind(this, id, dispatch)}></i>
+								<Link to={`edit/${id}`} >
+									<i className="fas fa-pencil-alt"
+										style={{
+											cursor: 'pointer',
+											float: 'right',
+											color: 'black',
+											marginRight: '1rem'
+										}}></i>
+								</Link>
 							</h4>
 
 							{showInfo ?
